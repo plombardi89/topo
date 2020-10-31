@@ -1,0 +1,12 @@
+linters:
+  enable-all: true
+  disable:
+    - gochecknoglobals
+    - gochecknoinits
+    - interfacer
+    - testpackage
+    - prealloc
+
+linters-settings:
+  funlen:
+    lines: 120

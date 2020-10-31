@@ -113,7 +113,7 @@ func (g *graph) RemoveNode(id string) bool {
 	}
 
 	for _, v := range g.Nodes() {
-		node, _ := g.nodes[v]
+		node := g.nodes[v]
 		node.Disconnect(id)
 	}
 
@@ -165,6 +165,7 @@ func (g *graph) Sort() ([]string, error) {
 	}
 
 	var stack []string
+
 	for k, v := range inboundConnections {
 		if v == 0 {
 			stack = append(stack, k)
@@ -174,8 +175,8 @@ func (g *graph) Sort() ([]string, error) {
 
 	for len(stack) > 0 {
 		//var vtxID string
-		nodeID := stack[len(stack) - 1]
-		stack = stack[:len(stack) - 1]
+		nodeID := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
 
 		node := g.nodes[nodeID]
 
@@ -192,6 +193,7 @@ func (g *graph) Sort() ([]string, error) {
 
 	if len(g.nodes) != len(sorted) {
 		var cycle []string
+
 		for k, v := range inboundConnections {
 			if v > 0 {
 				cycle = append(cycle, k)

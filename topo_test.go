@@ -13,6 +13,7 @@ func TestGraph(t *testing.T) {
 	g.PutNode("b")
 
 	g.PutNodes("c", "d", "e", "f")
+
 	if assert.Equal(t, []string{"a", "b", "c", "d", "e", "f"}, g.Nodes()) {
 		assert.True(t, g.Contains("c"))
 		assert.False(t, g.Contains("z"))
@@ -45,7 +46,7 @@ func TestGraph_Sort(t *testing.T) {
 		"d": {"a"},
 	})
 
-	sorted, err = g.Sort()
+	_, err = g.Sort()
 	if assert.Error(t, err) {
 		assert.EqualError(t, err, "graph cycle involving nodes: [a, b, c, d]")
 	}
