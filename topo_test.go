@@ -39,15 +39,17 @@ func TestGraph_Sort(t *testing.T) {
 		assert.Equal(t, []string{"a", "c", "b"}, sorted)
 	}
 
-	g = topo.GraphFromMap(map[string][]string{
-		"a": {"b", "c"},
-		"b": {},
-		"c": {"b", "d"},
-		"d": {"a"},
-	})
+	t.Run("detect cycle", func(t *testing.T) {
+		g = topo.GraphFromMap(map[string][]string{
+			"a": {"b", "c"},
+			"b": {},
+			"c": {"b", "d"},
+			"d": {"a"},
+		})
 
-	_, err = g.Sort()
-	if assert.Error(t, err) {
-		assert.EqualError(t, err, "graph cycle involving nodes: [a, b, c, d]")
-	}
+		_, err = g.Sort()
+		if assert.Error(t, err) {
+			assert.EqualError(t, err, "graph cycle involving nodes: [a, b, c, d]")
+		}
+	})
 }
