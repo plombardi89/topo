@@ -147,44 +147,43 @@ func (g *graph) Contains(id string) bool {
 func (g *graph) Sort() ([]string, error) {
 	var sorted []string
 
-	inboundConnections := make(map[string]int)
+	inbound := make(map[string]int)
 
 	for _, nodeID := range g.Nodes() {
 		node := g.nodes[nodeID]
-		if _, ok := inboundConnections[node.id]; !ok {
-			inboundConnections[node.id] = 0
+		if _, ok := inbound[node.id]; !ok {
+			inbound[node.id] = 0
 		}
 
 		for _, c := range node.Connections() {
-			if _, ok := inboundConnections[node.id]; !ok {
-				inboundConnections[c] = 1
+			if _, ok := inbound[node.id]; !ok {
+				inbound[c] = 1
 			} else {
-				inboundConnections[c]++
+				inbound[c]++
 			}
 		}
 	}
 
 	var stack []string
 
-	for k, v := range inboundConnections {
+	for k, v := range inbound {
 		if v == 0 {
 			stack = append(stack, k)
-			inboundConnections[k] = -1
+			inbound[k] = -1
 		}
 	}
 
 	for len(stack) > 0 {
-		//var vtxID string
 		nodeID := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 
 		node := g.nodes[nodeID]
 
 		for _, c := range node.Connections() {
-			inboundConnections[c]--
-			if inboundConnections[c] == 0 {
+			inbound[c]--
+			if inbound[c] == 0 {
 				stack = append(stack, c)
-				inboundConnections[c] = -1
+				inbound[c] = -1
 			}
 		}
 
@@ -194,7 +193,7 @@ func (g *graph) Sort() ([]string, error) {
 	if len(g.nodes) != len(sorted) {
 		var cycle []string
 
-		for k, v := range inboundConnections {
+		for k, v := range inbound {
 			if v > 0 {
 				cycle = append(cycle, k)
 			}
